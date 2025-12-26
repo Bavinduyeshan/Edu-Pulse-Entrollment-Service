@@ -93,4 +93,15 @@ public class EnrollmentService {
                 .map(enrollment -> classServiceClient.getClassById(enrollment.getClassId()))
                 .collect(Collectors.toList());
     }
+
+
+    public List<UserResponse> getEnrolledStudentsForClass(Long classId) {
+        List<Enrollment> enrollments = enrollmentRepository.findByClassIdAndActiveTrue(classId);
+
+
+        return enrollments.stream()
+                .map(enrollment -> userServiceClient.validateStudent(enrollment.getStudentId()))
+                .filter(user -> user != null && "STUDENT".equalsIgnoreCase(user.getRole()))
+                .collect(Collectors.toList());
+    }
 }

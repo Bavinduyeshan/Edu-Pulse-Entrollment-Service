@@ -43,4 +43,6 @@ public interface EnrollmentRepository extends JpaRepository<Enrollment, Long> {
      * Find all historical enrollments for a student (active + inactive) for audit
      */
     List<Enrollment> findByStudentId(Long studentId);
+
+    List<Enrollment> findByClassIdAndActiveTrue(Long classId);
 }
