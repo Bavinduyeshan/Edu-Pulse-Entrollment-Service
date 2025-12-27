@@ -128,4 +128,13 @@ public class EnrollmentController {
         return ResponseEntity.ok(details);
     }
 
+
+    // ========== ADMIN: Total enrollment count ==========
+    @GetMapping("/count")
+    public ResponseEntity<Long> getTotalEnrollmentCount() {
+        return ResponseEntity.ok(
+                enrollmentService.getTotalEnrollmentCount()
+        );
+    }
+
 }

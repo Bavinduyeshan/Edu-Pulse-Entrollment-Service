@@ -236,4 +236,8 @@ public class EnrollmentService {
     }
 
 
+
+    public long getTotalEnrollmentCount() {
+        return enrollmentRepository.countByActiveTrue();
+    }
 }
