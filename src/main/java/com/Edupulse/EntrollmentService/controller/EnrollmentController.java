@@ -1,9 +1,6 @@
 package com.Edupulse.EntrollmentService.controller;
 
-import com.Edupulse.EntrollmentService.model.dto.ClassResponse;
-import com.Edupulse.EntrollmentService.model.dto.EnrollmentRequest;
-import com.Edupulse.EntrollmentService.model.dto.EnrollmentResponse;
-import com.Edupulse.EntrollmentService.model.dto.UserResponse;
+import com.Edupulse.EntrollmentService.model.dto.*;
 import com.Edupulse.EntrollmentService.service.ClassServiceClient;
 import com.Edupulse.EntrollmentService.service.EnrollmentService;
 import jakarta.validation.Valid;
@@ -80,4 +77,55 @@ public class EnrollmentController {
         List<UserResponse> enrolledStudents = enrollmentService.getEnrolledStudentsForClass(classId);
         return ResponseEntity.ok(enrolledStudents);
     }
+
+    @GetMapping("/class/{classId}/count")
+    @PreAuthorize("hasRole('LECTURER')")
+    public ResponseEntity<Long> getStudentCountForClass(
+            @PathVariable Long classId,
+            @RequestHeader("X-User-Id") Long lecturerId) {
+
+        ClassResponse classInfo = classServiceClient.getClassById(classId);
+        if (!classInfo.getLecturerId().equals(lecturerId)) {
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
+        }
+
+        return ResponseEntity.ok(
+                enrollmentService.getStudentCountForClass(classId)
+        );
+    }
+
+
+    @GetMapping("/lecturer/students/count")
+    @PreAuthorize("hasRole('LECTURER')")
+    public ResponseEntity<Long> getTotalStudentCountForLecturer(
+            @RequestHeader("X-User-Id") Long lecturerId) {
+
+        return ResponseEntity.ok(
+                enrollmentService.getTotalStudentCountForLecturer(lecturerId)
+        );
+    }
+
+
+    @GetMapping("/lecturer/students")
+    @PreAuthorize("hasRole('LECTURER')")
+    public ResponseEntity<List<UserResponse>> getAllStudentsForLecturer(
+            @RequestHeader("X-User-Id") Long lecturerId) {
+
+        return ResponseEntity.ok(
+                enrollmentService.getAllStudentsForLecturer(lecturerId)
+        );
+    }
+
+
+
+    @GetMapping("/lecturer/student/{studentId}/details")
+    @PreAuthorize("hasRole('LECTURER')")
+    public ResponseEntity<StudentDetailsResponse> getStudentDetailsForLecturer(
+            @PathVariable Long studentId,
+            @RequestHeader("X-User-Id") Long lecturerId) {
+
+        StudentDetailsResponse details = enrollmentService.getStudentDetailsForLecturer(studentId, lecturerId);
+        return ResponseEntity.ok(details);
+    }
+
 }

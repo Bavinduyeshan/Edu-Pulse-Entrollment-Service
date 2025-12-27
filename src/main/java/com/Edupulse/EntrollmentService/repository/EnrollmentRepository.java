@@ -45,4 +45,12 @@ public interface EnrollmentRepository extends JpaRepository<Enrollment, Long> {
     List<Enrollment> findByStudentId(Long studentId);
 
     List<Enrollment> findByClassIdAndActiveTrue(Long classId);
+
+    // 🔢 NEW: count students in a class
+    long countByClassIdAndActiveTrue(Long classId);
+
+    // 🔢 NEW: get all enrollments for multiple classes
+    List<Enrollment> findByClassIdInAndActiveTrue(List<Long> classIds);
+    List<Enrollment> findByStudentIdAndClassIdInAndActiveTrue(Long studentId, List<Long> classIds);
+
 }
